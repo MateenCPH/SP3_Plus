@@ -29,7 +29,7 @@ public class FileIO {
 
     public static void saveUserData(ArrayList<User> users){
         try {
-            FileWriter writer = new FileWriter("ChillFlix/src/main/java/data/userList.txt");
+            FileWriter writer = new FileWriter("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\userList.txt");
             writer.write("Name,Password" + "\n");
             for (User user : users) {
                 String textTosave = user.getUsername() + "," + user.getPassword();

@@ -20,7 +20,7 @@ public class Homepage {
     }
 
     public void setup() {
-        ArrayList<String> readUserData = io.readUserData("ChillFlix/src/main/java/data/userList.txt");
+        ArrayList<String> readUserData = io.readUserData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\userList.txt");
         ArrayList<User> users = new ArrayList<>();
         for (String s : readUserData) {
             String[] parts = s.split(",");
@@ -31,7 +31,7 @@ public class Homepage {
         }
         io.saveUserData(userList);
 
-        ArrayList<String> movieData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3-StudieGruppeA\\ChillFlix\\src\\main\\java\\data\\movies.txt");
+        ArrayList<String> movieData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\movies.txt");
 
         for (String s : movieData) {
             String[] row = s.split(";");
@@ -45,7 +45,7 @@ public class Homepage {
             registerMovies(name, releaseDate, genre, rating);
         }
 
-        ArrayList<String> seriesData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3-StudieGruppeA\\ChillFlix\\src\\main\\java\\data\\series.txt");
+        ArrayList<String> seriesData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\series.txt");
         for (String s : seriesData) {
             String[] row = s.split(";");
             String name = row[0];
