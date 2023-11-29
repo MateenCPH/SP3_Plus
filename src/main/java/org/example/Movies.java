@@ -6,8 +6,8 @@ import java.util.Set;
 
 public class Movies extends Media {
 
-    public Movies(String mediaName, String releaseDate, ArrayList<String> genre, double rating) {
-        super(mediaName, releaseDate, genre, rating);
+    public Movies(int mediaID, String mediaName, ArrayList<String> genre, String releaseDate, double rating) {
+        super(mediaID, mediaName, releaseDate, genre, rating);
     }
 
     public void addToUserList() {

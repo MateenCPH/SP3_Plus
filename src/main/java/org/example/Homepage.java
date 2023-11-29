@@ -20,7 +20,7 @@ public class Homepage {
     }
 
     public void setup() {
-        ArrayList<String> readUserData = io.readUserData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\userList.txt");
+        /*ArrayList<String> readUserData = io.readUserData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\userList.txt");
         ArrayList<User> users = new ArrayList<>();
         for (String s : readUserData) {
             String[] parts = s.split(",");
@@ -66,7 +66,7 @@ public class Homepage {
                 episodesPerSeason.put(seasonNumber, episodeNumber);
             }
             registerSeries(name, runTime, genre, rating, episodesPerSeason);
-        }
+        }*/
         mainMenuDialog_categoryMenu();
         playMovieDialog_categories();
         logInDialog();
@@ -314,7 +314,7 @@ public class Homepage {
             return false;
         }
     }
-
+/*
     private void registerMovies(String name, String releaseDate, ArrayList<String> genres, double rating) {
         Movies m = new Movies(name, releaseDate, genres, rating);
         movies.add(m);
@@ -323,7 +323,7 @@ public class Homepage {
     private void registerSeries(String seriesName, String releaseDateStart, ArrayList<String> genre, double rating, Map<Integer, Integer> episodesPerSeason) {
         Series s = new Series(seriesName, releaseDateStart, genre, rating, episodesPerSeason);
         series.add(s);
-    }
+    }*/
 
     public ArrayList<Movies> getMovies() {
         return movies;

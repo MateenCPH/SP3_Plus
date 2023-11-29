@@ -7,8 +7,8 @@ public class Series extends Media {
 
     private final Map<Integer, Integer> episodesPerSeason;
 
-    public Series(String mediaName, String releaseDateStart, ArrayList<String> genre, double rating, Map<Integer, Integer> episodesPerSeason) {
-        super(mediaName, releaseDateStart, genre, rating);
+    public Series(int mediaID, String mediaName, String releaseDateStart, ArrayList<String> genre, double rating, Map<Integer, Integer> episodesPerSeason) {
+        super(mediaID, mediaName, releaseDateStart, genre, rating);
         this.episodesPerSeason = episodesPerSeason;
     }
 
