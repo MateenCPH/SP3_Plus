@@ -13,6 +13,7 @@ public class Homepage {
     ArrayList<User> userList = new ArrayList<>();
     ArrayList<String> menuOptions = new ArrayList<>();
     ArrayList<String> subMenuActions = new ArrayList<>();
+    DBConnector db = new DBConnector();
 
     public Homepage() {
         this.movies = new ArrayList<>();
@@ -20,7 +21,7 @@ public class Homepage {
     }
 
     public void setup() {
-        /*ArrayList<String> readUserData = io.readUserData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\userList.txt");
+        ArrayList<String> readUserData = io.readUserData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\userList.txt");
         ArrayList<User> users = new ArrayList<>();
         for (String s : readUserData) {
             String[] parts = s.split(",");
@@ -31,7 +32,9 @@ public class Homepage {
         }
         io.saveUserData(userList);
 
-        ArrayList<String> movieData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\movies.txt");
+
+
+        /*ArrayList<String> movieData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\movies.txt");
 
         for (String s : movieData) {
             String[] row = s.split(";");
@@ -67,6 +70,7 @@ public class Homepage {
             }
             registerSeries(name, runTime, genre, rating, episodesPerSeason);
         }*/
+        db.readDataMovies();
         mainMenuDialog_categoryMenu();
         playMovieDialog_categories();
         logInDialog();
@@ -129,8 +133,17 @@ public class Homepage {
             mainMenuDialog_movieCategory();
         } else if (input.equalsIgnoreCase("3") || input.equalsIgnoreCase("Watched Movies")) { // alle sete film for brugeren
             mainMenuDialog_showWatchedMovies();
+            String backInput = ui.getInput("[3] Back");
+            if (backInput.equalsIgnoreCase("3")){
+                mainMenuDialog();
+            }
         } else if (input.equalsIgnoreCase("4") || input.equalsIgnoreCase("Saved Movies")) { // alle gemte film for brugeren
             mainMenuDialog_showSavedMovies();
+            String backInput = ui.getInput("[3] Back");
+            if (backInput.equalsIgnoreCase("3")){
+                mainMenuDialog();
+            }
+
         } else {
             ui.displayMsg("You didn't choose an existing category, try again noob");
             ui.displayMsg("");
@@ -151,9 +164,9 @@ public class Homepage {
 
         boolean found = false; // Flag to check if movie is found
 
-        for (Movies movie : movies) {
-            if (movie.getMediaName().equalsIgnoreCase(input)) {
-                playMovieDialog(movie);
+        for (Media media : db.getMedia()) {
+            if (media.getMediaName().equalsIgnoreCase(input)) {
+                playMovieDialog(media);
                 found = true; // Set flag to true if movie is found
                 break;
             }
@@ -167,22 +180,23 @@ public class Homepage {
 
     public void mainMenuDialog_movieCategory() {
         Set<String> categories = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order
-        for (Movies movie : movies) {
+        for (Movies movie : db.getMedia()) {
             categories.addAll(movie.genre);
         }
         ui.displayMsg("");
         ui.displayMsg("Available Categories:");
         for (String category : categories) {
-            ui.displayMsg("- " + category);
+            ui.displayMsg("-" + category.trim());
         }
 
         ui.displayMsg("");
         String selectedCategory = ui.getInput("Pick a category: ");
-
+        selectedCategory = selectedCategory.substring(0, 1).toUpperCase() + selectedCategory.substring(1);
         ui.displayMsg("");
         ui.displayMsg("Movies in the '" + selectedCategory + "' category:");
+        //String typedCategory = ui.getInput("Movies in the '" + selectedCategory + "' category:");
         boolean foundMovies = false;
-        for (Movies movie : movies) {
+        for (Movies movie : db.getMedia()) {
             if (movie.genre.contains(selectedCategory)) {
                 ui.displayMsg(movie.toString());
                 foundMovies = true;
@@ -196,7 +210,7 @@ public class Homepage {
         while (true) {
             String chosenMovieFromCategory = ui.getInput("Enter the movie name you'd like to see: ");
             Movies chosenMovie = null;
-            for (Movies movie : movies) {
+            for (Movies movie : db.getMedia()) {
                 if (movie.getMediaName().equalsIgnoreCase(chosenMovieFromCategory) && movie.genre.contains(selectedCategory)) {
                     chosenMovie = movie;
                     playMovieDialog(chosenMovie);
@@ -215,65 +229,65 @@ public class Homepage {
 
     public void mainMenuDialog_showWatchedMovies() {
 
-        if (u.watchedMovies.isEmpty()) {
+        if (u.watchedMedia.isEmpty()) {
             ui.displayMsg("You have not watched any movies yet\nReturning to the main menu");
             ui.displayMsg("");
             mainMenuDialog();
         } else {
             ui.displayMsg("this are the movies you have seen");
 
-            for (Movies movie : u.watchedMovies) {
-                ui.displayMsg(movie.toString());
+            for (Media media : u.watchedMedia) {
+                ui.displayMsg(media.toString());
             }
         }
     }
 
     public void mainMenuDialog_showSavedMovies() {
-        if (u.savedMovies.isEmpty()) {
+        if (u.savedMedia.isEmpty()) {
             ui.displayMsg(u.getUsername() + ". You have not saved any movies yet\nReturning to the main menu");
             ui.displayMsg("");
             mainMenuDialog();
         } else {
             ui.displayMsg(u.getUsername() + ", this are the movies you have saved");
 
-            for (Movies movie : u.savedMovies) {
-                ui.displayMsg(movie.toString());
+            for (Media media : u.savedMedia) {
+                ui.displayMsg(media.toString());
             }
         }
     }
 
-    public void playMovieDialog(Movies movie) {
+    public void playMovieDialog(Media media) {
 
         System.out.println(subMenuActions);
         String input = ui.getInput("");
 
         if (input.equalsIgnoreCase("1") || input.equalsIgnoreCase("Play movie")) {
-            ui.displayMsg(movie.getMediaName() + " is now playing...");
+            ui.displayMsg(media.getMediaName() + " is now playing...");
             ui.displayMsg("");
             ui.displayMsg("press 'x' to pause");
             String stopInput = ui.getInput("");
             if (stopInput.equalsIgnoreCase("x")) {
                 ui.displayMsg("");
                 subMenuActions.set(0, "[1] Resume movie");
-                playMovieDialog(movie);
+                playMovieDialog(media);
             } else {
                 ui.getInput("Please try again");
-                playMovieDialog(movie);
+                playMovieDialog(media);
             }
         } else if (input.equalsIgnoreCase("2") || input.equalsIgnoreCase("Save movie") || input.equalsIgnoreCase("Remove")) {
-            if (!movieSaved(movie)) {
-                ui.displayMsg(movie.getMediaName() + " has been added to 'Saved movies'\nReturning to the menu...");
+            if (!mediaSaved(media)) {
+                ui.displayMsg(media.getMediaName() + " has been added to 'Saved movies'\nReturning to the menu...");
                 subMenuActions.set(1, "[2] Remove movie from 'Saved list'");
 
                 ui.displayMsg("");
-                u.addToSavedMovies(movie);
-                playMovieDialog(movie);
-            } else if (movieSaved(movie)) {
+                u.addToSavedMedia(media);
+                playMovieDialog(media);
+            } else if (mediaSaved(media)) {
                 subMenuActions.set(1, "[2] Save Movie");
-                ui.displayMsg(movie.getMediaName() + " has been removed from 'Saved moves'\nReturning to the menu...");
+                ui.displayMsg(media.getMediaName() + " has been removed from 'Saved moves'\nReturning to the menu...");
                 ui.displayMsg("");
-                u.removeFromSavedMovies(movie);
-                playMovieDialog(movie);
+                u.removeFromSavedMedia(media);
+                playMovieDialog(media);
             }
         } else if (input.equalsIgnoreCase("3") || input.equalsIgnoreCase("Back")) {
             ui.displayMsg("Returning to the main menu...");
@@ -286,17 +300,17 @@ public class Homepage {
                 logInDialog();
             } else if (input.equalsIgnoreCase("N")) {
                 ui.displayMsg("Returning to the menu...");
-                playMovieDialog(movie);
+                playMovieDialog(media);
             } else {
                 subMenuActions.set(0, "[1] Play Movie");
                 subMenuActions.set(1, "[2] Save Movie");
-                playMovieDialog(movie);
+                playMovieDialog(media);
             }
         } else {
             ui.displayMsg("Please try again");
             subMenuActions.set(0, "[1] Play Movie");
             subMenuActions.set(1, "[2] Save Movie");
-            playMovieDialog(movie);
+            playMovieDialog(media);
         }
     }
 
@@ -307,8 +321,8 @@ public class Homepage {
         subMenuActions.add("[4] Logout");
     }
 
-    public boolean movieSaved(Movies movie) {
-        if (u.savedMovies.contains(movie)) {
+    public boolean mediaSaved(Media media) {
+        if (u.savedMedia.contains(media)) {
             return true;
         } else {
             return false;
@@ -325,7 +339,5 @@ public class Homepage {
         series.add(s);
     }*/
 
-    public ArrayList<Movies> getMovies() {
-        return movies;
-    }
+
 }

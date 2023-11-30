@@ -6,15 +6,15 @@ public class Media {
 
     protected final int mediaID;
     private final String mediaName;
-    private final String releaseDateStart;
+    private final int releaseDateStart;
     protected final ArrayList<String> genre;
     private final double rating;
 
-    public Media(int mediaID, String mediaName, String releaseDateStart, ArrayList<String> genre, double rating) {
+    public Media(int mediaID, ArrayList<String> genre, String mediaName, int releaseDateStart, double rating) {
         this.mediaID = mediaID;
+        this.genre = genre;
         this.mediaName = mediaName;
         this.releaseDateStart = releaseDateStart;
-        this.genre = genre;
         this.rating = rating;
     }
 
@@ -22,7 +22,7 @@ public class Media {
         return mediaName;
     }
 
-    public String getReleaseDateStart() {
+    public int getReleaseDateStart() {
         return releaseDateStart;
     }
 

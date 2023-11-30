@@ -1,6 +1,8 @@
 package org.example;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBConnector {
     //mysql:mysql-connector-java:RELEASE
@@ -8,8 +10,13 @@ public class DBConnector {
     static final String DB_URL = "jdbc:mysql://localhost/my_streamingmjar";
     static final String USER = "root";
     static final String PASS = "Teknologisk2023!";
+    protected final ArrayList<Movies> media;
 
-    public void readData() {
+    public DBConnector() {
+        this.media = new ArrayList<>();
+    }
+
+    public void readDataMovies() {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
@@ -18,7 +25,7 @@ public class DBConnector {
             System.out.println("Connecting do database...");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            System.out.println("Creating statement...");
+            //System.out.println("Creating statement...");
             String sql = "SELECT * FROM movie";
             stmt = conn.prepareStatement((sql));
 
@@ -27,12 +34,14 @@ public class DBConnector {
             System.out.println("Printing result...");
             while (rs.next()) {
                 int mediaID = rs.getInt("movieID");
-                String genre = rs.getString("genre");
+                String[] genres = rs.getString("genre").trim().strip().split("\\.");
+                ArrayList<String> genre = new ArrayList<>(List.of(genres));
                 String name = rs.getString("name");
                 int year = rs.getInt("year");
                 double rating = rs.getDouble("rating");
-                Movies movie = new Movies(mediaID, name, genre, year, rating);
-                System.out.println(movie);
+                Movies movie = new Movies(mediaID, genre, name, year, rating);
+                media.add(movie);
+                //System.out.println(movie);
             }
             rs.close();
             stmt.close();
@@ -49,6 +58,10 @@ public class DBConnector {
                 se2.printStackTrace();
             }
         }
+    }
+
+    public ArrayList<Movies> getMedia() {
+        return media;
     }
 }
 
