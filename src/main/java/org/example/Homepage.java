@@ -127,40 +127,50 @@ public class Homepage {
         ui.displayMsg("");
         System.out.println(menuOptions);
         String input = ui.getInput("");
-        if (input.equalsIgnoreCase("1") || input.equalsIgnoreCase("Search movie")) { // søg efter en bestemt film
-            mainMenuDialog_searchMovie();
+        if (input.equalsIgnoreCase("1") || input.equalsIgnoreCase("Search Media")) { // søg efter en bestemt film
+            mainMenuDialog_searchMedia();
         } else if (input.equalsIgnoreCase("2") || input.equalsIgnoreCase("Categorys")) { // søg efter alle genre
-            mainMenuDialog_movieCategory();
-        } else if (input.equalsIgnoreCase("3") || input.equalsIgnoreCase("Watched Movies")) { // alle sete film for brugeren
+            mainMenuDialog_mediaCategory();
+        } else if (input.equalsIgnoreCase("3") || input.equalsIgnoreCase("Watched Media")) { // alle sete film for brugeren
             mainMenuDialog_showWatchedMovies();
             String backInput = ui.getInput("[3] Back");
-            if (backInput.equalsIgnoreCase("3")){
+            if (backInput.equalsIgnoreCase("3")) {
                 mainMenuDialog();
             }
-        } else if (input.equalsIgnoreCase("4") || input.equalsIgnoreCase("Saved Movies")) { // alle gemte film for brugeren
-            mainMenuDialog_showSavedMovies();
+        } else if (input.equalsIgnoreCase("4") || input.equalsIgnoreCase("Saved Media")) { // alle gemte film for brugeren
+            mainMenuDialog_showSavedMedia();
             String backInput = ui.getInput("[3] Back");
-            if (backInput.equalsIgnoreCase("3")){
+            if (backInput.equalsIgnoreCase("3")) {
                 mainMenuDialog();
             }
+        } else if (input.equalsIgnoreCase("5") || input.equalsIgnoreCase("Logout")) {
+            String logoutInput = ui.getInput("Are you sure you want to log out? Y/N");
+            if (logoutInput.equalsIgnoreCase("y")) {
+                ui.displayMsg("Logging out...");
+                logInDialog();
+            } else if (logoutInput.equalsIgnoreCase("N")) {
+                ui.displayMsg("Returning to the menu...");
+                mainMenuDialog();
 
-        } else {
-            ui.displayMsg("You didn't choose an existing category, try again noob");
-            ui.displayMsg("");
-            mainMenuDialog();
+            } else {
+                ui.displayMsg("You didn't choose an existing category, try again noob");
+                ui.displayMsg("");
+                mainMenuDialog();
+            }
         }
     }
 
     public void mainMenuDialog_categoryMenu() {
-        menuOptions.add("[1] Search specific movie");
+        menuOptions.add("[1] Search specific Media");
         menuOptions.add("[2] Category's");
-        menuOptions.add("[3] Watched Movies");
-        menuOptions.add("[4] Saved Movies");
+        menuOptions.add("[3] Watched Media");
+        menuOptions.add("[4] Saved Media");
+        menuOptions.add("[5] Logout");
     }
 
-    public void mainMenuDialog_searchMovie() {
+    public void mainMenuDialog_searchMedia() {
         ui.displayMsg("");
-        String input = ui.getInput("Choose a movie");
+        String input = ui.getInput("Choose a Media");
 
         boolean found = false; // Flag to check if movie is found
 
@@ -174,14 +184,14 @@ public class Homepage {
 
         if (!found) {
             ui.displayMsg("Could not find movie. Please try something else.");
-            mainMenuDialog_searchMovie(); // Prompt again if movie is not found
+            mainMenuDialog_searchMedia(); // Prompt again if movie is not found
         }
     }
 
-    public void mainMenuDialog_movieCategory() {
+    public void mainMenuDialog_mediaCategory() {
         Set<String> categories = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order
-        for (Movies movie : db.getMedia()) {
-            categories.addAll(movie.genre);
+        for (Media media : db.getMedia()) {
+            categories.addAll(media.genre);
         }
         ui.displayMsg("");
         ui.displayMsg("Available Categories:");
@@ -193,35 +203,35 @@ public class Homepage {
         String selectedCategory = ui.getInput("Pick a category: ");
         selectedCategory = selectedCategory.substring(0, 1).toUpperCase() + selectedCategory.substring(1);
         ui.displayMsg("");
-        ui.displayMsg("Movies in the '" + selectedCategory + "' category:");
+        ui.displayMsg("Media in the '" + selectedCategory + "' category:");
         //String typedCategory = ui.getInput("Movies in the '" + selectedCategory + "' category:");
-        boolean foundMovies = false;
-        for (Movies movie : db.getMedia()) {
-            if (movie.genre.contains(selectedCategory)) {
-                ui.displayMsg(movie.toString());
-                foundMovies = true;
+        boolean foundMedia = false;
+        for (Media media : db.getMedia()) {
+            if (media.genre.contains(selectedCategory)) {
+                ui.displayMsg(media.toString());
+                foundMedia = true;
             }
         }
-        if (!foundMovies) {
-            ui.displayMsg("No movies found in the '" + selectedCategory + "' category.");
+        if (!foundMedia) {
+            ui.displayMsg("No Media found in the '" + selectedCategory + "' category.");
         }
 
         ui.displayMsg("");
         while (true) {
-            String chosenMovieFromCategory = ui.getInput("Enter the movie name you'd like to see: ");
-            Movies chosenMovie = null;
-            for (Movies movie : db.getMedia()) {
-                if (movie.getMediaName().equalsIgnoreCase(chosenMovieFromCategory) && movie.genre.contains(selectedCategory)) {
-                    chosenMovie = movie;
-                    playMovieDialog(chosenMovie);
+            String chosenMovieFromCategory = ui.getInput("Enter the Media name you'd like to see: ");
+            Media chosenMedia = null;
+            for (Media media : db.getMedia()) {
+                if (media.getMediaName().equalsIgnoreCase(chosenMovieFromCategory) && media.genre.contains(selectedCategory)) {
+                    chosenMedia = media;
+                    playMovieDialog(chosenMedia);
                     break;
                 }
             }
-            if (chosenMovie != null) {
+            if (chosenMedia != null) {
                 //playMovieDialog(chosenMovie);
                 break;
             } else {
-                ui.displayMsg("The movie you have chosen is invalid. Please try again.");
+                ui.displayMsg("The media you have chosen is invalid. Please try again.");
             }
         }
     }
@@ -230,11 +240,11 @@ public class Homepage {
     public void mainMenuDialog_showWatchedMovies() {
 
         if (u.watchedMedia.isEmpty()) {
-            ui.displayMsg("You have not watched any movies yet\nReturning to the main menu");
+            ui.displayMsg("You have not watched any media yet\nReturning to the main menu");
             ui.displayMsg("");
             mainMenuDialog();
         } else {
-            ui.displayMsg("this are the movies you have seen");
+            ui.displayMsg("these are the media you have seen");
 
             for (Media media : u.watchedMedia) {
                 ui.displayMsg(media.toString());
@@ -242,13 +252,13 @@ public class Homepage {
         }
     }
 
-    public void mainMenuDialog_showSavedMovies() {
+    public void mainMenuDialog_showSavedMedia() {
         if (u.savedMedia.isEmpty()) {
-            ui.displayMsg(u.getUsername() + ". You have not saved any movies yet\nReturning to the main menu");
+            ui.displayMsg(u.getUsername() + ". You have not saved any media yet\nReturning to the main menu");
             ui.displayMsg("");
             mainMenuDialog();
         } else {
-            ui.displayMsg(u.getUsername() + ", this are the movies you have saved");
+            ui.displayMsg(u.getUsername() + ", these are the media you have saved");
 
             for (Media media : u.savedMedia) {
                 ui.displayMsg(media.toString());
@@ -261,62 +271,62 @@ public class Homepage {
         System.out.println(subMenuActions);
         String input = ui.getInput("");
 
-        if (input.equalsIgnoreCase("1") || input.equalsIgnoreCase("Play movie")) {
+        if (input.equalsIgnoreCase("1") || input.equalsIgnoreCase("Play media")) {
             ui.displayMsg(media.getMediaName() + " is now playing...");
             ui.displayMsg("");
             ui.displayMsg("press 'x' to pause");
             String stopInput = ui.getInput("");
             if (stopInput.equalsIgnoreCase("x")) {
                 ui.displayMsg("");
-                subMenuActions.set(0, "[1] Resume movie");
+                subMenuActions.set(0, "[1] Resume Media");
                 playMovieDialog(media);
             } else {
                 ui.getInput("Please try again");
                 playMovieDialog(media);
             }
-        } else if (input.equalsIgnoreCase("2") || input.equalsIgnoreCase("Save movie") || input.equalsIgnoreCase("Remove")) {
+        } else if (input.equalsIgnoreCase("2") || input.equalsIgnoreCase("Save media") || input.equalsIgnoreCase("Remove")) {
             if (!mediaSaved(media)) {
-                ui.displayMsg(media.getMediaName() + " has been added to 'Saved movies'\nReturning to the menu...");
-                subMenuActions.set(1, "[2] Remove movie from 'Saved list'");
+                ui.displayMsg(media.getMediaName() + " has been added to 'Saved Media'\nReturning to the menu...");
+                subMenuActions.set(1, "[2] Remove Media from 'Saved Media'");
 
                 ui.displayMsg("");
                 u.addToSavedMedia(media);
                 playMovieDialog(media);
             } else if (mediaSaved(media)) {
-                subMenuActions.set(1, "[2] Save Movie");
-                ui.displayMsg(media.getMediaName() + " has been removed from 'Saved moves'\nReturning to the menu...");
+                subMenuActions.set(1, "[2] Save Media");
+                ui.displayMsg(media.getMediaName() + " has been removed from 'Saved Media'\nReturning to the menu...");
                 ui.displayMsg("");
                 u.removeFromSavedMedia(media);
                 playMovieDialog(media);
             }
         } else if (input.equalsIgnoreCase("3") || input.equalsIgnoreCase("Back")) {
             ui.displayMsg("Returning to the main menu...");
-            subMenuActions.set(0, "[1] Play Movie");
+            subMenuActions.set(0, "[1] Play Media");
             mainMenuDialog();
         } else if (input.equalsIgnoreCase("4") || input.equalsIgnoreCase("Logout")) {
             String logoutInput = ui.getInput("Are you sure you want to log out? Y/N");
             if (logoutInput.equalsIgnoreCase("y")) {
                 ui.displayMsg("Logging out...");
                 logInDialog();
-            } else if (input.equalsIgnoreCase("N")) {
+            } else if (logoutInput.equalsIgnoreCase("N")) {
                 ui.displayMsg("Returning to the menu...");
                 playMovieDialog(media);
             } else {
-                subMenuActions.set(0, "[1] Play Movie");
-                subMenuActions.set(1, "[2] Save Movie");
+                subMenuActions.set(0, "[1] Play Media");
+                subMenuActions.set(1, "[2] Save Media");
                 playMovieDialog(media);
             }
         } else {
             ui.displayMsg("Please try again");
-            subMenuActions.set(0, "[1] Play Movie");
-            subMenuActions.set(1, "[2] Save Movie");
+            subMenuActions.set(0, "[1] Play Media");
+            subMenuActions.set(1, "[2] Save Media");
             playMovieDialog(media);
         }
     }
 
     public void playMovieDialog_categories() {
-        subMenuActions.add("[1] Play movie");
-        subMenuActions.add("[2] Save Movie");
+        subMenuActions.add("[1] Play Media");
+        subMenuActions.add("[2] Save Media");
         subMenuActions.add("[3] Back");
         subMenuActions.add("[4] Logout");
     }
@@ -328,6 +338,7 @@ public class Homepage {
             return false;
         }
     }
+
 /*
     private void registerMovies(String name, String releaseDate, ArrayList<String> genres, double rating) {
         Movies m = new Movies(name, releaseDate, genres, rating);
