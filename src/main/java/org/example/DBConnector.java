@@ -73,7 +73,7 @@ public class DBConnector {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             //System.out.println("Creating statement...");
-            String sql = "SELECT * FROM serie";
+            String sql = "SELECT * FROM series";
             stmt = conn.prepareStatement((sql));
 
             ResultSet rs = stmt.executeQuery();
@@ -81,28 +81,28 @@ public class DBConnector {
 
             System.out.println("Printing result...");
             while (rs.next()) {
-                int mediaID = rs.getInt("serieID");
+                int mediaID = rs.getInt("seriesID");
                 String[] genres = rs.getString("genre").trim().strip().split("\\.");
                 ArrayList<String> genre = new ArrayList<>(List.of(genres));
-                String name = rs.getString("name");
+                String name = rs.getString("Name");
                 int startYear = rs.getInt("startYear");
                 int endYear = rs.getInt("endYear");
 
-                String seasonsAndEpisodes = rs.getString("seasonAndEpisodes");
-                Map<Integer, Integer> episodesPerSeason = new HashMap<>();
-                String[] seasonEpisodesPairs = seasonsAndEpisodes.trim().split(",");
+                String seasonsAndEpisodes = rs.getString("seasonsAndEpisode");
+                /*Map<Integer, Integer> episodesPerSeason = new HashMap<>();
+                String[] seasonEpisodesPairs = seasonsAndEpisodes.trim().split("\\.");
                 for (String seasonEpisodesPair : seasonEpisodesPairs) {
                     String[] seasonEpisode = seasonEpisodesPair.split("-");
                     int seasonNumber = Integer.parseInt(seasonEpisode[0].trim());
                     int episodeNumber = Integer.parseInt(seasonEpisode[1].trim());
-                    episodesPerSeason.put(seasonNumber, episodeNumber);
+                    episodesPerSeason.put(seasonNumber, episodeNumber);*/
 
                     double rating = rs.getDouble("rating");
-                    Series series = new Series(mediaID, genre, name, startYear, endYear, episodesPerSeason, rating);
+                    Series series = new Series(mediaID, genre, name, startYear, endYear, seasonsAndEpisodes, rating);
                     media.add(series);
-                    //System.out.println(series);
+                    System.out.println(series);
                 }
-            }
+
             rs.close();
             stmt.close();
             conn.close();

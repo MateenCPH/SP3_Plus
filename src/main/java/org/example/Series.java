@@ -5,10 +5,10 @@ import java.util.Map;
 
 public class Series extends Media {
 
-    private final Map<Integer, Integer> episodesPerSeason;
+    private final String episodesPerSeason;
     private final int endYear;
 
-    public Series(int mediaID, ArrayList<String> genre, String mediaName, int releaseDateStart, int endYear, Map<Integer, Integer> episodesPerSeason, double rating) {
+    public Series(int mediaID, ArrayList<String> genre, String mediaName, int releaseDateStart, int endYear, String episodesPerSeason, double rating) {
         super(mediaID, genre, mediaName, releaseDateStart, rating);
         this.endYear = endYear;
         this.episodesPerSeason = episodesPerSeason;
@@ -22,7 +22,7 @@ public class Series extends Media {
 
     }
 
-    public Map<Integer, Integer> getEpisodesPerSeason() {
+    public String getEpisodesPerSeason() {
         return episodesPerSeason;
     }
 

@@ -70,10 +70,11 @@ public class Homepage {
             }
             registerSeries(name, runTime, genre, rating, episodesPerSeason);
         }*/
-        db.readDataMovies();
-        mainMenuDialog_categoryMenu();
-        playMovieDialog_categories();
-        logInDialog();
+        db.readDataSeries();
+        //db.readDataMovies();
+        //mainMenuDialog_categoryMenu();
+        //playMovieDialog_categories();
+        //logInDialog();
     }
 
 
