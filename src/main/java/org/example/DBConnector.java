@@ -100,7 +100,7 @@ public class DBConnector {
                     double rating = rs.getDouble("rating");
                     Series series = new Series(mediaID, genre, name, startYear, endYear, seasonsAndEpisodes, rating);
                     media.add(series);
-                    System.out.println(series);
+                    //System.out.println(series);
                 }
 
             rs.close();

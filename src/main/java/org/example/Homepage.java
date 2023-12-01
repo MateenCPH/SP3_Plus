@@ -14,6 +14,7 @@ public class Homepage {
     ArrayList<String> menuOptions = new ArrayList<>();
     ArrayList<String> subMenuActions = new ArrayList<>();
     DBConnector db = new DBConnector();
+    private String userName2 = "";
 
     public Homepage() {
         this.movies = new ArrayList<>();
@@ -71,10 +72,10 @@ public class Homepage {
             registerSeries(name, runTime, genre, rating, episodesPerSeason);
         }*/
         db.readDataSeries();
-        //db.readDataMovies();
-        //mainMenuDialog_categoryMenu();
-        //playMovieDialog_categories();
-        //logInDialog();
+        db.readDataMovies();
+        mainMenuDialog_categoryMenu();
+        playMovieDialog_categories();
+        logInDialog();
     }
 
 
@@ -105,7 +106,6 @@ public class Homepage {
         ui.displayMsg("New user created successfully");
         loginAccount();
     }
-
     public void loginAccount() {
         String inputUserName = ui.getInput("Enter your username:");
         String inputPassword = ui.getInput("Enter your password:");
@@ -113,7 +113,8 @@ public class Homepage {
         for (User user : userList) {
             if (user.getUsername().equals(inputUserName) && user.getPassword().equals(inputPassword)) {
                 ui.displayMsg("");
-                System.out.println("Welcome " + inputUserName);
+                userName2 = inputUserName;
+                System.out.println("Welcome " + userName2);
                 mainMenuDialog();
                 return;
             }
@@ -255,11 +256,11 @@ public class Homepage {
 
     public void mainMenuDialog_showSavedMedia() {
         if (u.savedMedia.isEmpty()) {
-            ui.displayMsg(u.getUsername() + ". You have not saved any media yet\nReturning to the main menu");
+            ui.displayMsg(userName2 + ". You have not saved any media yet\nReturning to the main menu");
             ui.displayMsg("");
             mainMenuDialog();
         } else {
-            ui.displayMsg(u.getUsername() + ", these are the media you have saved");
+            ui.displayMsg(userName2 + ", these are the media you have saved");
 
             for (Media media : u.savedMedia) {
                 ui.displayMsg(media.toString());
