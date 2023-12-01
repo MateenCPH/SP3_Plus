@@ -10,14 +10,6 @@ public class Movies extends Media {
         super(mediaID, genre, mediaName, releaseDate, rating);
     }
 
-    public void addToUserList() {
-        //user.addToWatchedMovies(ArrayList<>, movies);
-    }
-
-    public void removeFromUserList() {
-
-    }
-
     @Override
     public String toString() {
         return "Movie name: " + getMediaName() + super.toString();

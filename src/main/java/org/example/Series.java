@@ -14,13 +14,7 @@ public class Series extends Media {
         this.episodesPerSeason = episodesPerSeason;
     }
 
-    public void addToUserList() {
-        //user.addToSavedSeries(ArrayList<>, series);
-    }
 
-    public void removeFromUserList() {
-
-    }
 
     public String getEpisodesPerSeason() {
         return episodesPerSeason;

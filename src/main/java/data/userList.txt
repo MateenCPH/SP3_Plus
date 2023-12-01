@@ -1,4 +1,0 @@
-Name,Password
-Rebecca,123
-chad,123
-dragonSlayer2001Xx,123

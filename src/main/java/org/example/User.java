@@ -17,20 +17,6 @@ public class User {
         this.savedMedia = new ArrayList<>();
     }
 
-    public void registerUser() {
-        System.out.println("Please create an account with a username & password.");
-    }
-
-    public void playMovie(Movies movie) {
-        ui.displayMsg(movie.getMediaName() + " is now playing...");
-
-        //playMovieDialog();
-    }
-
-    public void addToWatchedMedia(Media media) {
-        watchedMedia.add(media);
-    }
-
     public void addToSavedMedia(Media media) {
         savedMedia.add(media);
     }
@@ -45,13 +31,5 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

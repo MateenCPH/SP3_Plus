@@ -22,14 +22,6 @@ public class Media {
         return mediaName;
     }
 
-    public int getReleaseDateStart() {
-        return releaseDateStart;
-    }
-
-   /* public ArrayList<String> getGenre() {
-        return genre.stream();
-    }*/
-
     public double getRating() {
         return rating;
     }

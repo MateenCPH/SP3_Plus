@@ -5,72 +5,18 @@ import java.util.HashMap;
 
 
 public class Homepage {
-    FileIO io = new FileIO();
-    private final ArrayList<Movies> movies;
-    private final ArrayList<Series> series;
     private final TextUI ui = new TextUI();
     private final User u = new User("Username", "Password");
-    ArrayList<User> userList = new ArrayList<>();
     ArrayList<String> menuOptions = new ArrayList<>();
     ArrayList<String> subMenuActions = new ArrayList<>();
     DBConnector db = new DBConnector();
     private String userName2 = "";
 
     public Homepage() {
-        this.movies = new ArrayList<>();
-        this.series = new ArrayList<>();
     }
 
     public void setup() {
-        ArrayList<String> readUserData = io.readUserData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\userList.txt");
-        ArrayList<User> users = new ArrayList<>();
-        for (String s : readUserData) {
-            String[] parts = s.split(",");
-            String username = parts[0].trim();
-            String password = parts[1].trim();
-
-            userList.add(new User(username, password));
-        }
-        io.saveUserData(userList);
-
-
-
-        /*ArrayList<String> movieData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\movies.txt");
-
-        for (String s : movieData) {
-            String[] row = s.split(";");
-            String name = row[0].trim();
-            String releaseDate = row[1].trim();
-            String[] genres = row[2].trim().strip().split(",");
-            ArrayList<String> genre = new ArrayList<>(List.of(genres));
-            String ratingString = row[3].trim().replace(",", ".");
-            double rating = Double.parseDouble(ratingString);
-
-            registerMovies(name, releaseDate, genre, rating);
-        }
-
-        ArrayList<String> seriesData = io.readMediaData("C:\\Users\\matee\\Documents\\Intellij\\SP3_Plus\\src\\main\\java\\data\\series.txt");
-        for (String s : seriesData) {
-            String[] row = s.split(";");
-            String name = row[0];
-            String runTime = row[1].trim();
-            String[] genres = row[2].split(",");
-            ArrayList<String> genre = new ArrayList<>(List.of(genres));
-
-            String ratingString = row[3].trim().replace(",", ".");
-            double rating = Double.parseDouble(ratingString);
-
-            String seasonsAndEpisodes = row[4];
-            Map<Integer, Integer> episodesPerSeason = new HashMap<>();
-            String[] seasonEpisodesPairs = seasonsAndEpisodes.trim().split(",");
-            for (String seasonEpisodesPair : seasonEpisodesPairs) {
-                String[] seasonEpisode = seasonEpisodesPair.split("-");
-                int seasonNumber = Integer.parseInt(seasonEpisode[0].trim());
-                int episodeNumber = Integer.parseInt(seasonEpisode[1].trim());
-                episodesPerSeason.put(seasonNumber, episodeNumber);
-            }
-            registerSeries(name, runTime, genre, rating, episodesPerSeason);
-        }*/
+        db.readUserData();
         db.readDataSeries();
         db.readDataMovies();
         mainMenuDialog_categoryMenu();
@@ -81,7 +27,7 @@ public class Homepage {
 
     public void logInDialog() {
         String input = "";
-        ui.displayMsg("Welcome to ChillFlix");
+        ui.displayMsg("\nWelcome to ChillFlix");
         ui.displayMsg("Would you like to login or create a new user?");
         input = ui.getInput("Press 'L' for Login or 'N' to create a new user");
         ui.displayMsg(" ");
@@ -99,18 +45,18 @@ public class Homepage {
         String newUsername = ui.getInput("Enter a new username:");
         String newPassword = ui.getInput("Enter a new password:");
 
-        User newUser = new User(newUsername, newPassword);
-        userList.add(newUser);
-        io.saveUserData(userList);
         ui.displayMsg("");
+        db.saveUserData(newUsername, newPassword);
         ui.displayMsg("New user created successfully");
+        db.readUserData();
         loginAccount();
     }
+
     public void loginAccount() {
         String inputUserName = ui.getInput("Enter your username:");
         String inputPassword = ui.getInput("Enter your password:");
 
-        for (User user : userList) {
+        for (User user : db.userList) {
             if (user.getUsername().equals(inputUserName) && user.getPassword().equals(inputPassword)) {
                 ui.displayMsg("");
                 userName2 = inputUserName;
@@ -261,10 +207,11 @@ public class Homepage {
             mainMenuDialog();
         } else {
             ui.displayMsg(userName2 + ", these are the media you have saved");
-
+            ui.displayMsg("");
             for (Media media : u.savedMedia) {
                 ui.displayMsg(media.toString());
             }
+            ui.displayMsg("");
         }
     }
 
@@ -275,6 +222,9 @@ public class Homepage {
 
         if (input.equalsIgnoreCase("1") || input.equalsIgnoreCase("Play media")) {
             ui.displayMsg(media.getMediaName() + " is now playing...");
+            if(!u.watchedMedia.contains(media)){
+                u.watchedMedia.add(media);
+            }
             ui.displayMsg("");
             ui.displayMsg("press 'x' to pause");
             String stopInput = ui.getInput("");
@@ -340,17 +290,4 @@ public class Homepage {
             return false;
         }
     }
-
-/*
-    private void registerMovies(String name, String releaseDate, ArrayList<String> genres, double rating) {
-        Movies m = new Movies(name, releaseDate, genres, rating);
-        movies.add(m);
-    }
-
-    private void registerSeries(String seriesName, String releaseDateStart, ArrayList<String> genre, double rating, Map<Integer, Integer> episodesPerSeason) {
-        Series s = new Series(seriesName, releaseDateStart, genre, rating, episodesPerSeason);
-        series.add(s);
-    }*/
-
-
 }

@@ -13,9 +13,11 @@ public class DBConnector {
     static final String USER = "root";
     static final String PASS = "Teknologisk2023!";
     protected final ArrayList<Media> media;
+    protected final ArrayList<User> userList;
 
     public DBConnector() {
         this.media = new ArrayList<>();
+        this.userList = new ArrayList<>();
     }
 
     public void readDataMovies() {
@@ -24,16 +26,14 @@ public class DBConnector {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            System.out.println("Connecting do database...");
+            //System.out.println("Connecting do database...");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            //System.out.println("Creating statement...");
             String sql = "SELECT * FROM movie";
             stmt = conn.prepareStatement((sql));
 
             ResultSet rs = stmt.executeQuery();
 
-            System.out.println("Printing result...");
             while (rs.next()) {
                 int mediaID = rs.getInt("movieID");
                 String[] genres = rs.getString("genre").trim().strip().split("\\.");
@@ -62,14 +62,12 @@ public class DBConnector {
         }
     }
 
-
     public void readDataSeries() {
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            System.out.println("Connecting do database...");
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             //System.out.println("Creating statement...");
@@ -79,7 +77,6 @@ public class DBConnector {
             ResultSet rs = stmt.executeQuery();
             //TIL USER SKAL VI SKRIVE executeUpdate!! + vi skal ikke SELECT men INSERT INTO + vi skal ikke bruge getString men setString
 
-            System.out.println("Printing result...");
             while (rs.next()) {
                 int mediaID = rs.getInt("seriesID");
                 String[] genres = rs.getString("genre").trim().strip().split("\\.");
@@ -122,6 +119,80 @@ public class DBConnector {
 
     public ArrayList<Media> getMedia() {
         return media;
+    }
+
+    public void readUserData(){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            //System.out.println("Connecting do database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            //System.out.println("Creating statement...");
+            String sql = "SELECT * FROM user";
+            stmt = conn.prepareStatement((sql));
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int userID = rs.getInt("userID");
+                String userName = rs.getString("Name");
+                String passWord = rs.getString("Password");
+                User user = new User(userName, passWord);
+                userList.add(user);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+        }
+    }
+
+    public void saveUserData(String Name, String Password) {
+        //Users userData = new Users();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            //System.out.println("Connecting do database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            String sql = "INSERT INTO User (Name, Password) VALUES(?,?)";
+            stmt = conn.prepareStatement((sql));
+
+            int userID = 0;
+            stmt.setString(1,Name);
+            stmt.setString(2,Password);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
     }
 }
 
