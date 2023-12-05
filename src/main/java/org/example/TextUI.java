@@ -1,4 +1,5 @@
 package org.example;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -12,6 +13,10 @@ public class TextUI {
 
     public void displayMsg(String msg){
         System.out.println(msg);
+    }
+
+    public void displayMsg(ArrayList<String> list){
+        System.out.println(list);
     }
 
 

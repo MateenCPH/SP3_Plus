@@ -217,12 +217,12 @@ public class Homepage {
 
     public void playMovieDialog(Media media) {
 
-        System.out.println(subMenuActions);
+        ui.displayMsg(subMenuActions);
         String input = ui.getInput("");
 
         if (input.equalsIgnoreCase("1") || input.equalsIgnoreCase("Play media")) {
             ui.displayMsg(media.getMediaName() + " is now playing...");
-            if(!u.watchedMedia.contains(media)){
+            if (!u.watchedMedia.contains(media)) {
                 u.watchedMedia.add(media);
             }
             ui.displayMsg("");
